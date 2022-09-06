@@ -32,4 +32,12 @@ set /a "newpos=1115"
 >nul reg add HKCU\Console /v WindowPosition /t REG_DWORD /d %newpos% /f
 start cmd /k "mode con: cols=28 lines=5 && ping google.com -t | sed "s/^Pinging.*$// ; s/^.*time=/ping to google.com\: / ; s/TTL.*//""
 
+@REM restore the old position
+if defined oldpos ( @REM if the WindowPosition was previously set before we changed it
+    reg add HKCU\Console /v WindowPosition /t REG_DWORD /d %oldpos% /f 
+) else (
+    @REM remove the WindowPosition key if it wasn't set before to leave system in same state as before  
+    >nul reg delete HKCU\Console /v WindowPosition /f
+)
+
 exit
